@@ -134,10 +134,14 @@ lemma eventually_mul_pow_lt_factorial (K X : ℕ) : ∀ᶠ n in atTop, K * X ^ n
 
 /-! ### The abc conjecture -/
 
-/-- The type of `ABC.abc` in formal-conjectures (the abc conjecture). -/
+/-- The type of `ABC.abc` in formal-conjectures (the abc conjecture), written with projections
+instead of the pattern `(a, b, c)`. A pattern here would create an auxiliary `match` function that
+the main theorem's statement would then reuse, so that statement would no longer be the same
+expression as in `Challenge.lean`. -/
 abbrev AbcHyp : Prop := ∀ (ε : ℝ), 0 < ε →
-    {(a, b, c) : ℕ × ℕ × ℕ | 0 < a ∧ 0 < b ∧ 0 < c ∧ ({a, b, c} : Set ℕ).Pairwise Nat.Coprime ∧
-    a + b = c ∧ (radical <| a * b * c : ℝ)^(1 + ε) < c}.Finite
+    {t : ℕ × ℕ × ℕ | 0 < t.1 ∧ 0 < t.2.1 ∧ 0 < t.2.2 ∧
+      ({t.1, t.2.1, t.2.2} : Set ℕ).Pairwise Nat.Coprime ∧ t.1 + t.2.1 = t.2.2 ∧
+      (radical <| t.1 * t.2.1 * t.2.2 : ℝ)^(1 + ε) < t.2.2}.Finite
 
 /-- The abc conjecture in the form used below: a coprime sum `u + v = w` has `w` bounded or
 `w ≤ rad(uvw)^(1+ε)`. -/
@@ -155,7 +159,8 @@ lemma abc_dichotomy (habc : AbcHyp) (ε : ℝ) (hε : 0 < ε) :
     have hvu := huv.symm
     have hwu := huw.symm
     have hwv := hvw.symm
-    refine hc ⟨(u, v, w), ⟨hu, hv, by omega, ?_, huvw, h⟩, rfl⟩
+    refine hc ⟨(u, v, w), ⟨hu, hv, show 0 < w by omega, ?_, huvw, h⟩, rfl⟩
+    show ({u, v, w} : Set ℕ).Pairwise Nat.Coprime
     rintro x (rfl | rfl | rfl) y (rfl | rfl | rfl) hxy <;>
       first | exact absurd rfl hxy | assumption
   · exact Or.inr (not_lt.1 h)
@@ -461,6 +466,7 @@ erdosproblems.com, this implies that $f(n) \to \infty$, conditional on the $abc$
 theorem erdos_393.variants.luca (habc : ∀ (ε : ℝ) (hε : 0 < ε),
     {(a, b, c) : ℕ × ℕ × ℕ | 0 < a ∧ 0 < b ∧ 0 < c ∧ ({a, b, c} : Set ℕ).Pairwise Nat.Coprime ∧
     a + b = c ∧ (radical <| a * b * c : ℝ)^(1 + ε) < c}.Finite) : Tendsto f atTop atTop := by
+  have habc : Erdos393Proof.AbcHyp := fun ε hε ↦ habc ε hε
   rw [tendsto_atTop]
   intro M
   have key : ∀ T ∈ (Finset.range M).powerset, ∀ᶠ n in atTop,
