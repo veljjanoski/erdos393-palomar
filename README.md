@@ -19,9 +19,9 @@ verbatim from [formal-conjectures](https://github.com/google-deepmind/formal-con
 the hypothesis is written `type_of% ABC.abc`; this project cannot import formal-conjectures, so
 the hypothesis is the statement of `ABC.abc` written out, copied verbatim.
 
-The proof in `Solution.lean` follows Luca's proof of Proposition 1 in *The Diophantine equation
-$P(x)=n!$ and a result of M. Overholt*, Glas. Mat. Ser. III 37 (2002), 269-273
-([PDF](https://web.math.pmf.unizg.hr/glasnik/37.2/37(2)-04.pdf)): the abc conjecture implies
+The proof in `Solution.lean` follows Luca's proof of Proposition 1 in
+*The Diophantine equation* $P(x)=n!$ *and a result of M. Overholt*, Glas. Mat. Ser. III 37 (2002),
+269-273 ([PDF](https://web.math.pmf.unizg.hr/glasnik/37.2/37(2)-04.pdf)): the abc conjecture implies
 that $P(x) = n!$ has only finitely many solutions for every integer polynomial $P$ of degree at
 least 2. The proof does not assume Luca's theorem: it formalizes Luca's proof for the polynomials
 $\prod_{i \in T}(x+i)$, from the abc conjecture; only the final reduction from $f(n)$ to these
@@ -31,7 +31,7 @@ If $f(n) \not\to \infty$, then $f(n) < M$ for some $M$ and infinitely many $n$, 
 offsets $T \subseteq \{0, \ldots, M-1\}$ gives $\prod_{i \in T} (a + i) = n!$ for infinitely many
 $n$. With $d = |T|$ and $y = d a + \sum_{i \in T} i$ this is $y^d + y^k R(y) = d^d n!$ with
 $k + \deg R \leq d - 2$ and $R(0) \neq 0$. The common factor of the two summands divides a power
-of $R(0)$. The abc conjecture, with $\operatorname{rad}(n!) \leq 4^n$, then bounds $y$ by an
+of $R(0)$. The abc conjecture, with $\mathrm{rad}(n!) \leq 4^n$, then bounds $y$ by an
 exponential in $n$, while $y^d \geq n!$.
 
 Not formalized: Luca's theorem for general polynomials $P$, any unconditional statement about
