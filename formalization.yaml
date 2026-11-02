@@ -1,0 +1,126 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "Erdős Problem 393: f(n) tends to infinity, assuming the abc conjecture"
+  description: >-
+    Let f(n) be the least m >= 1 such that n! = a_1 ... a_t with a_1 < ... < a_t = a_1 + m.
+    Assuming the abc conjecture, f(n) tends to infinity. The proof follows Luca's proof that
+    abc implies finitely many solutions of P(x) = n!, for the polynomials prod_{i in T} (x + i):
+    for a fixed set T of d offsets, the shift y = d a + sum(T) gives
+    d^d prod_{i in T} (a + i) = y^d + y^k R(y) with k + deg R <= d - 2 and R(0) != 0, and abc,
+    with rad(n!) <= 4^n, bounds y by an exponential in n, while y^d >= n!. It does not assume
+    Luca's theorem; only the reduction from f(n) to these polynomials is specific to Problem
+    393.
+  authors:
+    - "Daniel Veljjanoski"
+  license: "Apache-2.0"
+  responsible_maintainers:
+    - "Daniel Veljjanoski"
+
+classification:
+  arxiv: ["math.NT"]
+  msc2020: ["11D85", "11B65"]
+
+sources:
+  - title: "The Diophantine equation P(x) = n! and a result of M. Overholt"
+    authors:
+      - "Florian Luca"
+    type: "article"
+    location: "Glas. Mat. Ser. III 37 (2002), 269-273, https://web.math.pmf.unizg.hr/glasnik/37.2/37(2)-04.pdf"
+    relationship: "adapts"
+    note: >-
+      Proposition 1: the abc conjecture implies that P(x) = n! has only finitely many integer
+      solutions (x, n) with n > 0, for every integer polynomial P of degree at least 2. The Lean
+      proof follows Luca's proof for the polynomials prod_{i in T} (x + i): the shift that
+      removes the degree d - 1 term, the split z^j + R1(z) with R1(0) != 0, abc applied after
+      dividing by the common factor, rad(n!) < 4^n and epsilon = 1/(2d). It differs in two
+      details: Luca lets the common factor D cancel (rad(R1(z)/D) <= |R1(z)|/D), while the Lean
+      proof bounds it by |R(0)|^d; and it uses that n! eventually exceeds every K X^n instead of
+      Stirling's formula.
+    license: "unknown"
+    author_endorsement: "not-contacted"
+  - title: "Erdős Problem 393"
+    type: "web page"
+    location: "https://www.erdosproblems.com/393"
+    relationship: "formalizes"
+    note: >-
+      States that a result of Luca implies f(n) tends to infinity, conditional on the abc
+      conjecture.
+    license: "unknown"
+    author_endorsement: "n/a"
+
+related_formalizations:
+  - id: "https://github.com/google-deepmind/formal-conjectures/blob/a64e959c32c270df4dd0d96d2027481f15750534/FormalConjectures/ErdosProblems/393.lean"
+    relationship: "builds-on"
+    note: >-
+      The definition of f and the statement are copied verbatim from formal-conjectures
+      (Apache-2.0), where the statement is stated with sorry and the hypothesis is written
+      type_of% ABC.abc.
+  - id: "https://github.com/google-deepmind/formal-conjectures/blob/a64e959c32c270df4dd0d96d2027481f15750534/FormalConjectures/Wikipedia/ABC.lean"
+    relationship: "builds-on"
+    note: >-
+      ABC.radical is copied verbatim, and the hypothesis is the statement of ABC.abc written
+      out verbatim.
+
+status:
+  scope: >-
+    Formalized: assuming the abc conjecture in the form of formal-conjectures' ABC.abc (for
+    every epsilon > 0 there are only finitely many coprime triples a + b = c of positive
+    integers with c > rad(abc)^(1 + epsilon)), f(n) tends to infinity. Not formalized: Luca's
+    theorem for general polynomials P; any unconditional statement about f(n); the stronger
+    conditional bound f(n) >= n - O(log n) discussed on the erdosproblems.com forum for
+    Problem 393.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: ["propext", "Classical.choice", "Quot.sound"]
+
+automation:
+  methods:
+    - method: "agent"
+      models: ["Claude Opus 5.5 (Anthropic)"]
+      framework: "Claude Code"
+      tool_setup: >-
+        AI-assisted: a Claude Code agent wrote the proof plan, the Lean proof and the metadata,
+        using lake build and #print axioms; the author chose the target, directed the work and
+        checked the statement and the result.
+      cost:
+        wall_time: "about two hours"
+        spend_usd: "subscription-based"
+        hardware: "local machine"
+      prompting_notes: "n/a"
+  spend_usd: "subscription-based"
+  notes: >-
+    The author selected the statement from formal-conjectures, and an AI agent wrote the proof
+    under the author's direction. The statement was not changed.
+
+fidelity:
+  divergences: >-
+    None in meaning. formal-conjectures writes the hypothesis as type_of% ABC.abc; this project
+    cannot import formal-conjectures, so the hypothesis is that type written out. A check in
+    formal-conjectures confirmed that the two statements are the same expression, up to the
+    names of the auxiliary match functions, and are definitionally equal. As there, f n is the
+    junk value 0 for n <= 1, which does not affect the limit.
+
+review:
+  status: "self-assessed"
+  reviewers:
+    - "none"
+  notes: >-
+    The proof is checked by the Lean kernel; #print axioms gives only propext,
+    Classical.choice and Quot.sound. A script checked that the definitions in Challenge.lean
+    and Solution.lean are identical to the formal-conjectures ones. No human mathematical review
+    of the proof beyond the author's.
+
+alignment:
+  namespace: "Erdos393"
+  statements:
+    - source: "Luca 2002, Proposition 1 (case P(x) = prod_{i in T} (x + i)), as applied on erdosproblems.com/393"
+      lean: "Erdos393.erdos_393.variants.luca"
+      module: "Challenge"
+      status: "proved"
+      note: "Assuming the abc conjecture, f(n) tends to infinity."
+
+acknowledgements: >-
+  Mathlib; formal-conjectures for the statement and the definitions; erdosproblems.com; Luca's
+  proof [Lu02], which the Lean proof follows.
